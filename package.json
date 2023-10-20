@@ -1,0 +1,19 @@
+{
+  "name": "crawlerjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+      "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wipdev-tech/crawlerjs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wipdev-tech/crawlerjs/issues"
+  },
+  "homepage": "https://github.com/wipdev-tech/crawlerjs#readme"
+}
