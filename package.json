@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "start": "node main.js"
+    "start": "node main.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/wipdev-tech/crawlerjs/issues"
   },
-  "homepage": "https://github.com/wipdev-tech/crawlerjs#readme"
+  "homepage": "https://github.com/wipdev-tech/crawlerjs#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
