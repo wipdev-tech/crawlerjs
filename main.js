@@ -1,3 +1,5 @@
+const { crawlPage } = require('./crawl')
+
 function main() {
     if (process.argv.length < 3) {
         console.log("Error: no arguments provided (need exactly 1)")
@@ -10,6 +12,7 @@ function main() {
     }
 
     console.log(`Crawling URL ${process.argv[2]}...`)
+    crawlPage(process.argv[2])
 }
 
 main()

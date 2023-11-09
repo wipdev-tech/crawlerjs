@@ -1,6 +1,7 @@
 module.exports = {
     normalizeUrl,
-    getUrlsFromHTML
+    getUrlsFromHTML,
+    crawlPage
 }
 
 const { JSDOM } = require("jsdom")
@@ -16,3 +17,21 @@ function getUrlsFromHTML(htmlBody, baseURL) {
     return anchors.map(a => baseURL + a.href.replace("about:blank", ""))
 }
 
+function crawlPage(baseURL) {
+    fetch(baseURL)
+        .then(resp => {
+            if (!resp.ok) {
+                console.log("Error: could not fetch.")
+                return
+            }
+
+            if (!resp.headers.get('content-type').includes('text/html')) {
+                console.log("Error: response content type is not HTML")
+                return
+            }
+
+            return resp.text()
+        })
+        .then(console.log)
+        .catch("Something went wrong with fetching")
+}
