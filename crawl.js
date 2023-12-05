@@ -1,7 +1,8 @@
 module.exports = {
     normalizeURL,
     getURLsFromHTML,
-    myCrawler
+    myCrawler,
+    report
 }
 
 const { JSDOM } = require("jsdom")
@@ -35,56 +36,6 @@ function getURLsFromHTML(htmlBody, baseURL) {
     return anchors.map(a => makeAbsoluteURL(a.href))
 }
 
-/**
- * @param {string} baseURL The base URL.
- * @param {string} currentURL The current URL.
- * @param {object} pages The pages object.
- * @returns {object} Counts of all crawled pages.
- */
-function crawlPage(baseURL, currentURL, pages) {
-    if (new URL(baseURL).host != new URL(currentURL).host) {
-        return pages
-    }
-
-    const current = currentURL.replace(/\/+$/, "")
-    const baseNorm = normalizeURL(baseURL)
-    const currentNorm = normalizeURL(current)
-
-    if (pages.hasOwnProperty(currentNorm)) {
-        pages[currentNorm]++
-        return pages
-    } else if (currentNorm != baseNorm) {
-        pages[currentNorm] = 1
-    } else {
-        pages[currentNorm] = 0
-    }
-
-    console.log(`Crawling URL ${currentNorm}`)
-
-    try {
-        fetch(current)
-            .then(resp => {
-                if (!resp.ok) {
-                    console.log("Error: could not fetch.")
-                } else if (!resp.headers.get('content-type').includes('text/html')) {
-                    console.log("Error: response content type is not HTML")
-                } else {
-                    return resp.text()
-                }
-            })
-            .then(body => {
-                const URLs = getURLsFromHTML(body, baseURL)
-
-                URLs.forEach(url => {
-                    pages = crawlPage(baseURL, url, pages)
-                })
-            })
-    } catch (error) {
-        console.log("Error while fetching :( -- ", error.message)
-    } finally {
-        return pages
-    }
-}
 
 /**
  * @param {string} baseURL The base URL.
@@ -149,3 +100,23 @@ async function fetchURLs(targetURL, baseURL) {
     return URLs
 }
 
+
+function report(pages) {
+    const reportData = []
+
+    for (p in pages) {
+        reportData.push({ url: p, count: pages[p].count })
+    }
+
+    console.log("")
+    console.log("---------- CRAWL REPORT ----------")
+    console.log("")
+
+    reportData
+        .sort((a, b) => a.count > b.count ? -1 : 1)
+        .forEach(({ url, count }) => {
+            console.log(url)
+            console.log(`${count} occurrences`)
+            console.log("")
+        })
+}
