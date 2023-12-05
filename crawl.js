@@ -1,7 +1,7 @@
 module.exports = {
     normalizeURL,
     getURLsFromHTML,
-    crawlPage
+    myCrawler
 }
 
 const { JSDOM } = require("jsdom")
@@ -12,7 +12,7 @@ const { JSDOM } = require("jsdom")
  */
 function normalizeURL(u) {
     const url = new URL(u)
-    return url.host + url.pathname
+    return url.origin + url.pathname
 }
 
 /**
@@ -85,3 +85,67 @@ function crawlPage(baseURL, currentURL, pages) {
         return pages
     }
 }
+
+/**
+ * @param {string} baseURL The base URL.
+ * @returns {object} Counts of all crawled pages.
+ */
+async function myCrawler(baseURL) {
+    const pages = {}
+
+    pages[normalizeURL(baseURL)] = { count: 0, visited: false }
+
+    let targetURL = baseURL
+    let tryAgain = false
+
+    do {
+        tryAgain = false
+
+        console.log(`Crawling URL ${targetURL}`)
+        const URLs = await fetchURLs(targetURL, baseURL)
+        pages[normalizeURL(targetURL)].visited = true
+
+        // adding/incrementing URLs
+        for (const u of URLs) {
+            if (new URL(u).host != new URL(baseURL).host) {
+                continue
+            }
+
+            const uNorm = normalizeURL(u)
+            if (!pages.hasOwnProperty(uNorm)) {
+                pages[uNorm] = { count: 0, visited: false }
+            }
+
+            pages[uNorm].count += 1
+        }
+
+        // checking if there is more URLs to crawl
+        for (const page in pages) {
+            if (!pages[page].visited) {
+                tryAgain = true
+                targetURL = page
+                break
+            }
+        }
+
+    } while (tryAgain)
+
+    return pages
+}
+
+async function fetchURLs(targetURL, baseURL) {
+    const fetchRes = await fetch(targetURL)
+
+    if (!fetchRes.ok) {
+        console.log("Error: could not fetch.")
+    }
+    if (!fetchRes.headers.get('content-type').includes('text/html')) {
+        console.log("Error: response content type is not HTML")
+    }
+
+    const body = await fetchRes.text()
+    const URLs = getURLsFromHTML(body, baseURL)
+
+    return URLs
+}
+

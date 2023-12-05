@@ -1,4 +1,4 @@
-const { crawlPage } = require('./crawl')
+const { myCrawler } = require('./crawl')
 
 function main() {
     if (process.argv.length < 3) {
@@ -11,8 +11,10 @@ function main() {
         return
     }
 
-    const pages = crawlPage(process.argv[2], process.argv[2], {})
-    console.log(pages)
+    // const pages = crawlPage(process.argv[2], process.argv[2], {})
+    // console.log(pages)
+    myCrawler(process.argv[2])
+        .then(pages => console.log(pages))
 }
 
 main()
