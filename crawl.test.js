@@ -1,29 +1,29 @@
 const { test, expect } = require('@jest/globals')
-const { normalizeUrl, getUrlsFromHTML: getURLsFromHTML } = require('./crawl.js')
+const { normalizeURL, getURLsFromHTML: getURLsFromHTML } = require('./crawl.js')
 
-// normalizeUrl tests
+// normalizeURL tests
 test("trailing slash is ignored", () => {
-    expect(normalizeUrl("https://duckduckgo.com/"))
-        .toBe(normalizeUrl("https://duckduckgo.com"))
+    expect(normalizeURL("https://duckduckgo.com/"))
+        .toBe(normalizeURL("https://duckduckgo.com"))
 })
 
 test("http(s) is ignored", () => {
-    expect(normalizeUrl("https://duckduckgo.com/"))
-        .toBe(normalizeUrl("http://duckduckgo.com/"))
+    expect(normalizeURL("https://duckduckgo.com/"))
+        .toBe(normalizeURL("http://duckduckgo.com/"))
 })
 
 test("search params are ignored", () => {
-    expect(normalizeUrl("https://duckduckgo.com/?t=h_&q=lol&ia=web"))
-        .toBe(normalizeUrl("https://duckduckgo.com/"))
+    expect(normalizeURL("https://duckduckgo.com/?t=h_&q=lol&ia=web"))
+        .toBe(normalizeURL("https://duckduckgo.com/"))
 })
 
 test("hash is ignored", () => {
-    expect(normalizeUrl("https://duckduckgo.com/#searchbox_input"))
-        .toBe(normalizeUrl("https://duckduckgo.com/"))
+    expect(normalizeURL("https://duckduckgo.com/#searchbox_input"))
+        .toBe(normalizeURL("https://duckduckgo.com/"))
 })
 
 
-// getUrlsFromHTML tests
+// getURLsFromHTML tests
 test("urls are extracted", () => {
     const htmlStr = `<p>I did talk about JS noise briefly in the <a href="/posts/developer-philosophies/">Developer Philosophies</a> article, although I wrote that... ... attention to a language’s common philosophies and practices (and I contemplated that topic in yet another article called <a href="/posts/pragmatism-vs-idealism/">Pragmatism vs Idealism</a>).</p> <a href="/">Home</a>`
 

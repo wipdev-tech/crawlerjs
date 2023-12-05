@@ -11,8 +11,8 @@ function main() {
         return
     }
 
-    console.log(`Crawling URL ${process.argv[2]}...`)
-    crawlPage(process.argv[2])
+    const pages = crawlPage(process.argv[2], process.argv[2], {})
+    console.log(pages)
 }
 
 main()
